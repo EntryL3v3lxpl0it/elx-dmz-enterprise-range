@@ -1,0 +1,7 @@
+---
+elx_internal_dirs:
+  - /opt/elx/internal
+  - /var/log/elx/internal
+enable_provisioning_egress: false
+gateway_private_ip: ""
+package_proxy_port: 3142

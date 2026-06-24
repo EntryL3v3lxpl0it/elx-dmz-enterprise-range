@@ -1,0 +1,6 @@
+---
+elx_install_docker: true
+elx_docker_user: ubuntu
+elx_internal_dirs:
+  - /opt/elx/internal
+  - /var/log/elx/internal

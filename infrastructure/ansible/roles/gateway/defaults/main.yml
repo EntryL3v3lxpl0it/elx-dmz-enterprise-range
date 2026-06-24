@@ -1,0 +1,16 @@
+---
+# Break-glass only. Default keeps forwarding OFF.
+gateway_enable_ip_forwarding: false
+gateway_enable_breakglass_nat: false
+
+gateway_net_tools:
+  - tcpdump
+  - traceroute
+  - dnsutils
+  - mtr-tiny
+
+# Prepared now; configured in later phases.
+gateway_dirs:
+  - /opt/elx/wireguard
+  - /opt/elx/reverse-proxy
+  - /var/log/elx/gateway

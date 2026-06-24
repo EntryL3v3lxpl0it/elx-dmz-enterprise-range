@@ -1,0 +1,12 @@
+---
+# Gateway is INFRASTRUCTURE, not a student target.
+elx_install_docker: false
+
+# IP forwarding stays DISABLED unless explicitly requested (break-glass only).
+gateway_enable_ip_forwarding: false
+gateway_enable_breakglass_nat: false
+
+# Package proxy (apt-cacher-ng). Bind to the private interface; SG enforces CIDR access.
+package_proxy_allowed_cidrs:
+  - 10.50.20.0/24   # dmz-apps
+  - 10.50.40.0/24   # internal-apps

@@ -1,0 +1,5 @@
+bucket       = "elx-tfstate-<account-id>-us-east-2"
+key          = "elx-dmz-enterprise-range/team1/terraform.tfstate"
+region       = "us-east-2"
+encrypt      = true
+use_lockfile = true

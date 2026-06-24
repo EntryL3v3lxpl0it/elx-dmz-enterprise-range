@@ -1,0 +1,8 @@
+---
+- name: Configure internal host only
+  hosts: internal
+  become: true
+  roles:
+    - common
+    - docker
+    - internal-host

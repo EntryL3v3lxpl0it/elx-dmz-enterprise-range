@@ -1,0 +1,10 @@
+# Managed by Ansible (elx package-proxy). Provisioning-only Debian/Ubuntu cache.
+# Bind only to the gateway private interface; the public path is never used.
+BindAddress: {{ package_proxy_bind_address }}
+Port: {{ package_proxy_port }}
+
+# NOTE: client CIDR restriction is enforced at the AWS security group layer
+# (provisioning-egress toggle + private subnet CIDRs), not in this file:
+{% for cidr in package_proxy_allowed_cidrs %}
+#   allowed: {{ cidr }}
+{% endfor %}

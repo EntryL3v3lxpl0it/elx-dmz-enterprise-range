@@ -1,0 +1,28 @@
+---
+- name: Create internal directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop: "{{ elx_internal_dirs }}"
+  become: true
+
+- name: Configure apt proxy (provisioning egress on)
+  ansible.builtin.copy:
+    dest: /etc/apt/apt.conf.d/01elx-proxy
+    mode: "0644"
+    content: |
+      Acquire::http::Proxy "http://{{ gateway_private_ip }}:{{ package_proxy_port }}";
+  become: true
+  when:
+    - enable_provisioning_egress | bool
+    - gateway_private_ip | length > 0
+
+- name: Remove apt proxy (provisioning egress off)
+  ansible.builtin.file:
+    path: /etc/apt/apt.conf.d/01elx-proxy
+    state: absent
+  become: true
+  when: not (enable_provisioning_egress | bool)
+
+# Intentionally NO internal applications are deployed in Phase 1b.

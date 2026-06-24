@@ -1,0 +1,7 @@
+---
+- name: Restart apt-cacher-ng
+  ansible.builtin.service:
+    name: apt-cacher-ng
+    state: restarted
+  become: true
+  when: enable_provisioning_egress | bool

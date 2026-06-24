@@ -1,0 +1,8 @@
+---
+elx_install_docker: false
+elx_docker_user: ubuntu
+elx_add_user_to_docker_group: true
+# Use OS packages (no external Docker repo) to keep egress minimal.
+elx_docker_packages:
+  - docker.io
+  - docker-compose-v2

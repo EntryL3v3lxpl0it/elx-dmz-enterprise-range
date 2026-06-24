@@ -1,0 +1,8 @@
+---
+elx_dmz_dirs:
+  - /opt/elx/services
+  - /opt/elx/dmz
+  - /var/log/elx/dmz
+enable_provisioning_egress: false
+gateway_private_ip: ""
+package_proxy_port: 3142

@@ -1,9 +1,8 @@
 ---
-- name: Configure ELX DMZ server
+- name: Configure DMZ host only
   hosts: dmz
   become: true
-
   roles:
     - common
     - docker
-    - dmz-web
+    - dmz-host

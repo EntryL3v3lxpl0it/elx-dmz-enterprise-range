@@ -1,34 +1,27 @@
-# Secrets and local state
-.env
-*.env
 *.tfstate
 *.tfstate.*
-.terraform/
 *.pem
 *.key
-*.conf
-student-access-packet/
-artifacts/
-flag-manifest.json
+**/backend.hcl
+**/terraform.tfvars
+**/inventories/team1.ini
+.terraform/
 
-# Python
-__pycache__/
-*.pyc
-.venv/
-venv/
-
-# OS/editor
-.DS_Store
-.vscode/
-.idea/
-
-# Runtime-generated lab data
+# Local/private range material
 .env
+.env.*
+!.env.example
 flag-manifest.json
+flags/
 artifacts/
 
-# Local Terraform variable files
-*.auto.tfvars
+# Terraform local/runtime material
 *.tfvars
-!*.tfvars.example
-!*.auto.tfvars.example
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform/

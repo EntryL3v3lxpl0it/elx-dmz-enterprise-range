@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Enterprise Cyber TTP Training Pipeline
 
 ## Project Purpose
@@ -131,3 +132,47 @@ By documenting this project publicly, the repository should demonstrate:
 * Technical writing and mentorship readiness
 
 The final objective is to create a structured, professional, and repeatable training pipeline that helps bridge the gap between learning cybersecurity concepts and practicing them in realistic enterprise conditions.
+=======
+# elx-dmz-enterprise-range
+
+A controlled, authorized, **lab-only** offensive-security training range simulating a
+Fortune 500-style enterprise. For penetration-testing practice, exploit *validation*,
+detection engineering, purple-team exercises, and professional reporting.
+
+> ⚠️ **Authorized use only.** Every vulnerability is intentionally introduced and lab-only.
+> No real malware, persistence, stealth tooling, or instructions for attacking third-party
+> systems. The range is not internet-exposed (VPN / source-IP allowlist).
+
+## Status
+**Phase 1 — MVP Foundation (candidate, reconciled).** Terraform written; **nothing applied**.
+Validation must be run in your environment before any `apply`.
+
+## Tiers
+| Tier | Description |
+|------|-------------|
+| MVP Foundation (team1) | 1 VPC (`10.50.0.0/16`, us-east-2), 3 subnets, gateway + vulnerable DMZ app host + internal app host, $50 budget, S3 state, lightweight monitoring |
+| Near-Term Simulation | Multiple web apps behind a private reverse proxy, cloud-services + internal app tier (Linux + Windows), initial Samba AD identity model |
+| Full Target State | 8 zones, 9 app categories, 500+ synthetic identities, 6+ attack paths, full detection + scoring; multi-team templating |
+
+## Layout
+```text
+docs/             architecture (+ decision-log), student, instructor, operations, identity, attack-paths, detection
+infrastructure/
+  terraform/      VPC, security groups, compute, budget, S3 backend (Phase 1)
+  ansible/        host configuration (Phase 1b+)
+services/         intentionally-vulnerable apps (Phase 2+)
+scripts/          reset / cost tooling
+tests/            validation
+```
+
+## Start here
+- Architecture: `docs/architecture/overview.md`, `network-design.md`, `enterprise-target-state.md`
+- Decisions: `docs/architecture/decision-log.md`
+- Terraform: `infrastructure/terraform/README.md`
+
+## Identity note
+"500 users" = 500+ **synthetic** AD/LDAP identity objects, **not** 500 machines (A-04).
+
+## Standards alignment
+MITRE ATT&CK, CWE, CVSS, OWASP Top 10 / WSTG, NIST SP 800-115, CIS Controls.
+>>>>>>> d2d9886 (Add Phase 1 MVP foundation)

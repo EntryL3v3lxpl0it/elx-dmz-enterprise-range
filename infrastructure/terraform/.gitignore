@@ -1,0 +1,23 @@
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Backend / account-specific (A-11 / Decision #8)
+**/backend.hcl
+!**/backend.hcl.example
+
+# Secrets / private material (A-11)
+*.pem
+*.key
+**/flags.manifest*
+**/*credentials*

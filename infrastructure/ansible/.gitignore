@@ -1,0 +1,9 @@
+# Never commit real inventories (real IPs) or secrets
+inventories/team1.ini
+inventories/*.ini
+!inventories/*.ini.example
+*.retry
+vault-password*
+*.vault
+*.pem
+*.key

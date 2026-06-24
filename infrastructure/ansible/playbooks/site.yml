@@ -1,0 +1,30 @@
+---
+# Full Phase 1b configuration for team1.
+# Order: common baseline everywhere, then per-role host configuration.
+
+- name: Common baseline (all hosts)
+  hosts: team1
+  become: true
+  roles:
+    - common
+
+- name: Gateway configuration (infrastructure only)
+  hosts: gateway
+  become: true
+  roles:
+    - gateway
+    - package-proxy
+
+- name: DMZ application host configuration
+  hosts: dmz
+  become: true
+  roles:
+    - docker
+    - dmz-host
+
+- name: Internal application host configuration
+  hosts: internal
+  become: true
+  roles:
+    - docker
+    - internal-host

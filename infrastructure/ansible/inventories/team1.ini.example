@@ -1,0 +1,16 @@
+# Copy to inventories/team1.ini (gitignored) and fill in values from Terraform outputs.
+# Do NOT commit real IP addresses.
+
+[gateway]
+team1-gateway ansible_host=<gateway_public_ip> ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/<key>
+
+[dmz]
+team1-dmz-app ansible_host=<dmz_private_ip> ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/<key> ansible_ssh_common_args='-o ProxyJump=ubuntu@<gateway_public_ip>'
+
+[internal]
+team1-int-app ansible_host=<internal_private_ip> ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/<key> ansible_ssh_common_args='-o ProxyJump=ubuntu@<gateway_public_ip>'
+
+[team1:children]
+gateway
+dmz
+internal

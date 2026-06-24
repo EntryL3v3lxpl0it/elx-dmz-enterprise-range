@@ -2,15 +2,66 @@
 - name: Update apt cache
   ansible.builtin.apt:
     update_cache: true
+    cache_valid_time: 3600
   become: true
 
 - name: Install baseline packages
   ansible.builtin.apt:
-    name:
-      - curl
-      - git
-      - ufw
-      - ca-certificates
-      - gnupg
+    name: "{{ elx_common_packages }}"
     state: present
+  become: true
+
+- name: Ensure rsyslog is present (logging basics)
+  ansible.builtin.apt:
+    name: rsyslog
+    state: present
+  become: true
+  when: elx_ensure_rsyslog | bool
+
+- name: Set hostname (optional)
+  ansible.builtin.hostname:
+    name: "{{ elx_hostname }}"
+  become: true
+  when:
+    - elx_set_hostname | bool
+    - elx_hostname | length > 0
+
+- name: Configure timezone (link /etc/localtime)
+  ansible.builtin.file:
+    src: "/usr/share/zoneinfo/{{ elx_timezone }}"
+    dest: /etc/localtime
+    state: link
+    force: true
+  become: true
+
+- name: Write /etc/timezone
+  ansible.builtin.copy:
+    dest: /etc/timezone
+    content: "{{ elx_timezone }}\n"
+    mode: "0644"
+  become: true
+
+- name: Ensure /opt/elx exists
+  ansible.builtin.file:
+    path: "{{ elx_base_dir }}"
+    state: directory
+    mode: "0755"
+  become: true
+
+- name: Ensure /var/log/elx exists
+  ansible.builtin.file:
+    path: "{{ elx_log_dir }}"
+    state: directory
+    mode: "0755"
+  become: true
+
+- name: Write lab marker (no secrets)
+  ansible.builtin.copy:
+    dest: "{{ elx_marker_path }}"
+    mode: "0644"
+    content: |
+      ELX DMZ Enterprise Range
+      Environment: {{ elx_environment }}
+      ManagedBy: Ansible
+      Purpose: Authorized Training Lab
   become: true

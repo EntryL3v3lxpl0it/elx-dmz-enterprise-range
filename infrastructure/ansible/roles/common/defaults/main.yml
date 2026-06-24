@@ -1,0 +1,17 @@
+---
+elx_environment: team1
+elx_base_dir: /opt/elx
+elx_log_dir: /var/log/elx
+elx_timezone: Etc/UTC
+elx_marker_path: /etc/elx-range
+elx_set_hostname: false
+elx_hostname: ""
+elx_common_packages:
+  - curl
+  - wget
+  - jq
+  - unzip
+  - git
+  - net-tools
+  - ca-certificates
+elx_ensure_rsyslog: true

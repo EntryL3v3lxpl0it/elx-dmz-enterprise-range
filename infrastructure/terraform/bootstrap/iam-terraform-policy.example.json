@@ -1,0 +1,34 @@
+{
+  "_comment": "Reference starting point for the least-privilege IAM policy of the Terraform principal. Scope down further to specific ARNs/conditions for your account. Not applied by this stack.",
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "TerraformStateAccess",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject",
+        "s3:ListBucket",
+        "s3:GetBucketVersioning"
+      ],
+      "Resource": [
+        "arn:aws:s3:::elx-tfstate-ACCOUNT_ID-us-east-2",
+        "arn:aws:s3:::elx-tfstate-ACCOUNT_ID-us-east-2/elx-dmz-enterprise-range/*"
+      ]
+    },
+    {
+      "Sid": "RangeProvisioning",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:*",
+        "budgets:ViewBudget",
+        "budgets:ModifyBudget"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": { "aws:RequestedRegion": "us-east-2" }
+      }
+    }
+  ]
+}

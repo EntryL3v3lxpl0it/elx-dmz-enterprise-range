@@ -1,0 +1,34 @@
+---
+# apt-cacher-ng chosen over Squid: purpose-built for Debian/Ubuntu package
+# caching, smaller config surface, and safer defaults for a provisioning-only
+# proxy. Squid is a general forward proxy and would need more hardening.
+- name: Manage apt-cacher-ng package proxy
+  become: true
+  block:
+    - name: Install apt-cacher-ng
+      ansible.builtin.apt:
+        name: apt-cacher-ng
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Configure apt-cacher-ng (bind to private interface)
+      ansible.builtin.template:
+        src: zzz-elx.conf.j2
+        dest: /etc/apt-cacher-ng/zzz-elx.conf
+        mode: "0644"
+      notify: Restart apt-cacher-ng
+
+    - name: Enable + start proxy ONLY when provisioning egress is on
+      ansible.builtin.service:
+        name: apt-cacher-ng
+        state: started
+        enabled: true
+      when: enable_provisioning_egress | bool
+
+    - name: Stop + disable proxy when provisioning egress is off (default)
+      ansible.builtin.service:
+        name: apt-cacher-ng
+        state: stopped
+        enabled: false
+      when: not (enable_provisioning_egress | bool)

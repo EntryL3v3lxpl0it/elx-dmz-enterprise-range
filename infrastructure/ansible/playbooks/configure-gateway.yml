@@ -1,0 +1,8 @@
+---
+- name: Configure gateway only
+  hosts: gateway
+  become: true
+  roles:
+    - common
+    - gateway
+    - package-proxy

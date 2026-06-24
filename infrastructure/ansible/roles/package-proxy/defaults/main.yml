@@ -1,0 +1,10 @@
+---
+# Disabled unless provisioning egress is explicitly enabled.
+enable_provisioning_egress: false
+package_proxy_port: 3142
+# Bind to the private interface so the proxy is never on the public path.
+package_proxy_bind_address: "{{ ansible_default_ipv4.address | default('127.0.0.1') }}"
+# CIDRs documented here; access is ENFORCED by the AWS security group + the toggle.
+package_proxy_allowed_cidrs:
+  - 10.50.20.0/24
+  - 10.50.40.0/24
