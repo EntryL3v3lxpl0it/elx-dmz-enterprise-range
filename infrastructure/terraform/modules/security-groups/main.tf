@@ -98,7 +98,7 @@ resource "aws_vpc_security_group_egress_rule" "dmz_dns" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "dmz_s3" {
-  count             = var.s3_prefix_list_id == "" ? 0 : 1
+  count             = var.enable_s3_egress_rules ? 1 : 0
   security_group_id = aws_security_group.dmz_app.id
   description       = "HTTPS to S3 gateway endpoint"
   prefix_list_id    = var.s3_prefix_list_id
@@ -154,7 +154,7 @@ resource "aws_vpc_security_group_egress_rule" "intapp_dns" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "intapp_s3" {
-  count             = var.s3_prefix_list_id == "" ? 0 : 1
+  count             = var.enable_s3_egress_rules ? 1 : 0
   security_group_id = aws_security_group.intapp.id
   description       = "HTTPS to S3 gateway endpoint"
   prefix_list_id    = var.s3_prefix_list_id

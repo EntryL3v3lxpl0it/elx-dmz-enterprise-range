@@ -46,3 +46,10 @@ variable "dmz_to_intapp_ports" {
   type        = list(number)
   default     = [8080, 5432]
 }
+
+
+variable "enable_s3_egress_rules" {
+  description = "Create S3 prefix-list egress rules for private hosts. Must be a plan-time known boolean."
+  type        = bool
+  default     = true
+}
