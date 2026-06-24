@@ -1,0 +1,42 @@
+name: Validate
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform fmt check
+        run: terraform fmt -recursive -check
+        working-directory: infrastructure/terraform
+
+      - name: Terraform init
+        run: terraform init
+        working-directory: infrastructure/terraform/envs/cohorts/team1
+
+      - name: Terraform validate
+        run: terraform validate
+        working-directory: infrastructure/terraform/envs/cohorts/team1
+
+      - name: Docker Compose config check
+        run: docker compose -f deploy/local/docker-compose.mvp.yml config
+
+      - name: Generate local test flags
+        run: |
+          python3 scoring/flag-generator/generate_flags.py \
+            --cohort-id cohort-ci \
+            --team-id team1 \
+            --out flag-manifest.json \
+            --env-out .env
