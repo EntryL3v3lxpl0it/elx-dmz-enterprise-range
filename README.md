@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Enterprise Cyber TTP Training Pipeline
 
 ## Project Purpose
@@ -175,4 +174,3 @@ tests/            validation
 
 ## Standards alignment
 MITRE ATT&CK, CWE, CVSS, OWASP Top 10 / WSTG, NIST SP 800-115, CIS Controls.
->>>>>>> d2d9886 (Add Phase 1 MVP foundation)
