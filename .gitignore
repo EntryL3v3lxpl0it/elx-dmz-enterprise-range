@@ -26,3 +26,9 @@ venv/
 .env
 flag-manifest.json
 artifacts/
+
+# Local Terraform variable files
+*.auto.tfvars
+*.tfvars
+!*.tfvars.example
+!*.auto.tfvars.example
