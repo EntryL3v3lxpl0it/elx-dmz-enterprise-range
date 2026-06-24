@@ -66,3 +66,43 @@ resource "aws_subnet" "monitor" {
     RuntimeModel = "on-demand"
   }
 }
+
+resource "aws_internet_gateway" "this" {
+  vpc_id = aws_vpc.this.id
+
+  tags = {
+    Name         = "${var.team_id}-igw"
+    Project      = var.project
+    CohortID     = var.cohort_id
+    TeamID       = var.team_id
+    Domain       = var.domain
+    ExpiresAt    = var.expires_at
+    ManagedBy    = "terraform"
+    RuntimeModel = "on-demand"
+  }
+}
+
+resource "aws_route_table" "dmz" {
+  vpc_id = aws_vpc.this.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.this.id
+  }
+
+  tags = {
+    Name         = "${var.team_id}-dmz-rt"
+    Project      = var.project
+    CohortID     = var.cohort_id
+    TeamID       = var.team_id
+    Domain       = var.domain
+    ExpiresAt    = var.expires_at
+    ManagedBy    = "terraform"
+    RuntimeModel = "on-demand"
+  }
+}
+
+resource "aws_route_table_association" "dmz" {
+  subnet_id      = aws_subnet.dmz.id
+  route_table_id = aws_route_table.dmz.id
+}

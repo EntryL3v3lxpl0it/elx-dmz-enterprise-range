@@ -1,0 +1,8 @@
+cohort_id           = "cohort-dev"
+team_id             = "team1"
+domain              = "team1.elx-lab.local"
+expires_at          = "2026-07-01T23:59:00-07:00"
+student_source_cidr = "YOUR_PUBLIC_IP/32"
+ami_id              = "ami-REPLACE_WITH_UBUNTU_AMI"
+ssh_key_name        = "REPLACE_WITH_EXISTING_EC2_KEYPAIR"
+dmz_instance_type   = "t3.micro"
