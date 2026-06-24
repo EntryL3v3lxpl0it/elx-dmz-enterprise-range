@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from starlette.middleware.sessions import SessionMiddleware
@@ -14,12 +15,12 @@ FLAG = os.getenv("NORTHSTAR_FLAG", "ELX{local:missing_flag:dev}")
 
 USERS = {
     "alex.customer": {
-        "password": "Password123!",
+        "password": os.getenv("NORTHSTAR_LAB_PASSWORD", "Password123!"),
         "role": "customer",
         "customer_id": 1001,
     },
     "sam.customer": {
-        "password": "Password123!",
+        "password": os.getenv("NORTHSTAR_LAB_PASSWORD", "Password123!"),
         "role": "customer",
         "customer_id": 1002,
     },
