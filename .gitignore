@@ -32,3 +32,6 @@ __pycache__/
 
 # Terraform plan files
 *.tfplan
+
+# Terraform backend config with account-specific values
+backend.hcl

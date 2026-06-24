@@ -13,12 +13,11 @@ locals {
 
 # --- Edge gateway --------------------------------------------------------
 resource "aws_instance" "gateway" {
-  ami                         = var.ami_id
-  instance_type               = var.gateway_instance_type
-  subnet_id                   = var.subnet_ids["public-edge"]
-  vpc_security_group_ids      = [var.gateway_sg_id]
-  key_name                    = var.key_name
-  associate_public_ip_address = false
+  ami                    = var.ami_id
+  instance_type          = var.gateway_instance_type
+  subnet_id              = var.subnet_ids["public-edge"]
+  vpc_security_group_ids = [var.gateway_sg_id]
+  key_name               = var.key_name
   # BREAK-GLASS ONLY (see variable docs / decision-log): default keeps source/dest
   # check ENABLED. Flipping this alone does NOT create a working NAT path.
   source_dest_check = var.gateway_acts_as_nat ? false : true
