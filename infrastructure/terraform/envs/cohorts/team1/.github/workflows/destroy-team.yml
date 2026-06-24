@@ -1,0 +1,63 @@
+name: Destroy Team
+
+on:
+  workflow_dispatch:
+    inputs:
+      cohort_id:
+        description: "Cohort ID"
+        required: true
+        default: "cohort-dev"
+      team_id:
+        description: "Team ID"
+        required: true
+        default: "team1"
+      expires_at:
+        description: "Expiration timestamp"
+        required: true
+        default: "manual-dev"
+      student_source_cidr:
+        description: "Authorized source CIDR used during deployment"
+        required: true
+        default: "0.0.0.0/32"
+      ami_id:
+        description: "Ubuntu AMI ID used during deployment"
+        required: true
+      ssh_key_name:
+        description: "Existing EC2 key pair name used during deployment"
+        required: true
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  destroy-team:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials through OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: us-west-2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform init
+        run: terraform init
+        working-directory: infrastructure/terraform/envs/cohorts/team1
+
+      - name: Terraform destroy
+        run: |
+          terraform destroy -auto-approve \
+            -var="cohort_id=${{ github.event.inputs.cohort_id }}" \
+            -var="team_id=${{ github.event.inputs.team_id }}" \
+            -var="expires_at=${{ github.event.inputs.expires_at }}" \
+            -var="student_source_cidr=${{ github.event.inputs.student_source_cidr }}" \
+            -var="ami_id=${{ github.event.inputs.ami_id }}" \
+            -var="ssh_key_name=${{ github.event.inputs.ssh_key_name }}"
+        working-directory: infrastructure/terraform/envs/cohorts/team1
