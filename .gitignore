@@ -22,3 +22,8 @@ venv/
 .DS_Store
 .vscode/
 .idea/
+
+# Runtime-generated lab data
+.env
+flag-manifest.json
+artifacts/
