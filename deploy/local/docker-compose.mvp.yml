@@ -1,0 +1,19 @@
+services:
+  northstar-portal:
+    build:
+      context: ../../applications/northstar-portal
+    env_file:
+      - ../../.env
+    ports:
+      - "8000:8000"
+
+  scoring-api:
+    build:
+      context: ../../scoring/api
+    environment:
+      FLAG_MANIFEST: /data/flag-manifest.json
+    volumes:
+      - ../../flag-manifest.json:/data/flag-manifest.json:ro
+      - ../../artifacts/scoring:/data
+    ports:
+      - "9000:9000"
