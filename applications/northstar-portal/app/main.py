@@ -8,7 +8,7 @@ app = FastAPI(title="Northstar Portal")
 
 app.add_middleware(
     SessionMiddleware,
-    secret_key="dev-session-key-change-in-prod"
+    secret_key=os.getenv("NORTHSTAR_SESSION_SECRET", "lab-only-dev-session-key")
 )
 
 FLAG = os.getenv("NORTHSTAR_FLAG", "ELX{local:missing_flag:dev}")

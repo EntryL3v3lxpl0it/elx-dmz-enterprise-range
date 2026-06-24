@@ -131,7 +131,6 @@ By documenting this project publicly, the repository should demonstrate:
 * Technical writing and mentorship readiness
 
 The final objective is to create a structured, professional, and repeatable training pipeline that helps bridge the gap between learning cybersecurity concepts and practicing them in realistic enterprise conditions.
-=======
 # elx-dmz-enterprise-range
 
 A controlled, authorized, **lab-only** offensive-security training range simulating a
