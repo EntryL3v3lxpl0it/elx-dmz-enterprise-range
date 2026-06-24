@@ -29,3 +29,6 @@ override.tf.json
 # Python runtime artifacts
 __pycache__/
 *.py[cod]
+
+# Terraform plan files
+*.tfplan
