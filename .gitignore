@@ -1,37 +1,30 @@
-*.tfstate
-*.tfstate.*
-*.pem
-*.key
+# Terraform local/runtime files
+**/.terraform/
 **/backend.hcl
 **/terraform.tfvars
-**/inventories/team1.ini
-.terraform/
-
-# Local/private range material
-.env
-.env.*
-!.env.example
-flag-manifest.json
-flags/
-artifacts/
-
-# Terraform local/runtime material
-*.tfvars
 *.tfstate
 *.tfstate.*
+tfplan
+*.tfplan
 crash.log
+crash.*.log
 override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
-.terraform/
 
-# Python runtime artifacts
-__pycache__/
-*.py[cod]
+# Ansible local/generated files
+infrastructure/ansible/inventories/*.ini
 
-# Terraform plan files
-*.tfplan
+# Secrets and private keys
+*.pem
+*.key
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
 
-# Terraform backend config with account-specific values
-backend.hcl
+# Local OS/editor files
+.DS_Store
+.vscode/
+.idea/

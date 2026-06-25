@@ -18,7 +18,7 @@ on:
       student_source_cidr:
         description: "Authorized source CIDR used during deployment"
         required: true
-        default: "0.0.0.0/32"
+        default: ""
       ami_id:
         description: "Ubuntu AMI ID used during deployment"
         required: true
@@ -42,7 +42,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
-          aws-region: us-west-2
+          aws-region: us-east-2
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3

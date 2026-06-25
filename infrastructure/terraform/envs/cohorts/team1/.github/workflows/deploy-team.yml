@@ -18,9 +18,9 @@ on:
       student_source_cidr:
         description: "Authorized source CIDR for MVP access"
         required: true
-        default: "0.0.0.0/32"
+        default: ""
       ami_id:
-        description: "Ubuntu AMI ID for us-west-2"
+        description: "Ubuntu AMI ID for us-east-2"
         required: true
       ssh_key_name:
         description: "Existing EC2 key pair name"
@@ -42,7 +42,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
-          aws-region: us-west-2
+          aws-region: us-east-2
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
