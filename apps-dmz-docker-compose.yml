@@ -1,0 +1,112 @@
+# ELX DMZ Range — Phase 2 vulnerable web stack. AUTHORIZED LAB USE ONLY.
+#
+# Chains: WEB-01/02/08 (Acme Portal), WEB-03 (Acme Search), WEB-04 (Acme Docs).
+# Each chain is toggled via CHAIN_WEBxx (true = vulnerable, false = fixed) so the
+# remediated code path can be taught for the remediation lesson.
+#
+# Containment:
+#   * DB sits on an internal-only `backend` network and publishes no port.
+#   * Apps publish ports for ingress only; runtime internet egress is prevented
+#     at the host/VPC layer (dmz-web01 has no internet route — locked design).
+#   * Vulnerable app containers use no host bind mounts (the only host mount is
+#     the read-only DB seed dir), run non-root where the base image allows,
+#     set no-new-privileges, and have pid/memory limits. They are ephemeral and
+#     reset by redeploy.
+#
+# Flags come from .flags.env (rendered per-deploy by render-flags.sh; gitignored).
+# Non-secret config + lab-internal DB passwords come from .env.
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    internal: true          # DB is unreachable from outside the host
+
+services:
+  db:
+    image: mariadb:11
+    environment:
+      MARIADB_ROOT_PASSWORD: "${MARIADB_ROOT_PASSWORD:-root_lab_pw}"
+    # Read-only seed mount only (DB init scripts) — not a vulnerable container.
+    volumes:
+      - ./db/seed:/docker-entrypoint-initdb.d:ro
+    # Ephemeral datadir: re-seeds on every (re)start, supporting reset-by-redeploy.
+    tmpfs:
+      - /var/lib/mysql
+    networks: [backend]
+    cap_drop: ["NET_RAW"]
+    security_opt: ["no-new-privileges:true"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  portal:                   # WEB-01 broken access control, WEB-02 IDOR, WEB-08 reset
+    build: ./acme-portal
+    env_file: [.flags.env]
+    environment:
+      DB_HOST: db
+      DB_USER: portal_app
+      DB_PASS: "${PORTAL_DB_PASS:-portal_app_pw}"
+      DB_NAME: portal
+      PADMIN_PW: "${PADMIN_PW:-Autumn2024!}"
+      CHAIN_WEB01: "${CHAIN_WEB01:-true}"
+      CHAIN_WEB02: "${CHAIN_WEB02:-true}"
+      CHAIN_WEB08: "${CHAIN_WEB08:-true}"
+      FLASK_SECRET: "${FLASK_SECRET:-change-me-lab-only}"
+    ports:
+      - "${PORTAL_PORT:-8001}:8000"
+    networks: [frontend, backend]
+    depends_on:
+      db:
+        condition: service_healthy
+    read_only: true
+    tmpfs: ["/tmp"]
+    cap_drop: ["ALL"]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 200
+    mem_limit: 256m
+    restart: unless-stopped
+
+  search:                   # WEB-03 SQL injection
+    build: ./acme-search
+    env_file: [.flags.env]
+    environment:
+      DB_HOST: db
+      DB_USER: search_app
+      DB_PASS: "${SEARCH_DB_PASS:-search_app_pw}"
+      DB_NAME: search
+      CHAIN_WEB03: "${CHAIN_WEB03:-true}"
+    ports:
+      - "${SEARCH_PORT:-8002}:80"
+    networks: [frontend, backend]
+    depends_on:
+      db:
+        condition: service_healthy
+    # php:apache binds :80 and drops to www-data, so it keeps the minimal caps
+    # apache needs; NET_RAW is dropped and privilege gains are blocked.
+    cap_drop: ["NET_RAW"]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 200
+    mem_limit: 256m
+    restart: unless-stopped
+
+  docs:                     # WEB-04 file upload -> contained command execution
+    build: ./acme-docs
+    env_file: [.flags.env]
+    environment:
+      CHAIN_WEB04: "${CHAIN_WEB04:-true}"
+    ports:
+      - "${DOCS_PORT:-8003}:80"
+    networks: [frontend]    # no DB access needed
+    # Uploads land on a tmpfs (wiped on restart = reset); the RCE blast radius is
+    # this single ephemeral, non-root, no-host-mount, egress-less container.
+    tmpfs:
+      - /var/www/html/uploads:uid=33,gid=33,mode=1777
+    cap_drop: ["NET_RAW"]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 200
+    mem_limit: 256m
+    restart: unless-stopped
